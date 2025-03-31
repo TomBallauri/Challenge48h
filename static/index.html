@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course de Pixel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Course de Pixel - Challenge 48H</h1>
+        <button id="help">Aide</button>
+      </div>
+
+      <div class="rules">
+        <h2>Règles du jeu</h2>
+        <p>Bienvenue dans votre Challenge !</p>
+        <p>Le but de ce jeu est simple : vous et l'ordinateur allez participer à une course. Vous contrôlez votre personnage avec la souris. L'ordinateur avance de manière aléatoire, mais vous devez tenter de le rattraper avant lui.</p>
+        <p>Le jeu prend fin lorsque l'un des personnages atteint la ligne d'arrivée. Bonne chance !</p>
+
+        <p><strong>Important :</strong> Le jeu est conçu pour être joué de manière honnête. Toute tentative de triche via des moyens externes au jeu, comme la console de développement ou en modifiant le code, entrainera une annulation de la victoire.</p>
+      </div>      
+
+  <div class="track">
+    <div class="player" id="player">🏃‍♂️</div>
+    <div class="computer" id="computer">🤖</div>
+    <div class="finish-line" id="finish-line"></div>
+  </div>
+
+  <div class="controls">
+    <button id="start">Start</button>
+    <button id="restart" disabled>Rejouer</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
