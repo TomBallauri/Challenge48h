@@ -1,0 +1,142 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #fff; /* Fond de la page en blanc */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Prend toute la largeur du viewport */
+    background-color: #2d6a4f; /* Vert sobre pour le header */
+    padding: 15px 30px; /* Un peu plus de padding pour occuper toute la hauteur */
+    position: fixed; /* Fixe le header en haut de la page */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Assure que le header soit toujours au-dessus du contenu */
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+    color: #fff; /* Texte en blanc */
+  }
+  
+  button {
+    background-color: #4caf50; /* Vert pour le bouton */
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transition pour le hover */
+  }
+  
+  button:hover {
+    background-color: #45a049; /* Vert plus clair lors du survol */
+  }
+
+  #help {
+    padding: 15px 40px; /* Augmentation du padding pour agrandir le bouton "Aide" */
+    font-size: 1.2rem; /* Augmentation de la taille du texte du bouton "Aide" */
+  }s  
+  
+  body {
+    padding-top: 70px; /* Ajout de padding pour laisser de l'espace sous le header */
+  }  
+  
+  button:disabled {
+    cursor: not-allowed;
+    background-color: #ccc;
+  }
+
+  .rules {
+    width: 80%;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rules h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .rules p {
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.6;
+  }  
+  
+  .track {
+    width: 90%;
+    height: 200px;
+    position: relative;
+    background-color: #d3d3d3;
+    margin-top: 100px;
+    border: 3px solid #333;
+  }
+  
+  .player, .computer {
+    font-size: 40px;
+    position: absolute;
+    bottom: 0;
+    padding: 0.5%;
+  }
+  
+  .player {
+    left: 0;
+    bottom: 5px
+  }
+  
+  .computer {
+    left: 0;
+    bottom: 70px; /* Positionner l'emoji de l'ordinateur un peu plus haut que celui du joueur */
+  }
+  
+  .finish-line {
+    position: absolute;
+    right: 0%;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    background-color: #000;
+    z-index: 10;
+  }
+  
+  .controls {
+    margin-top: 20px;
+  }
+  
+  .track {
+    position: relative;
+    width: 80%;
+    height: 150px;
+    background-color: #ddd;
+    margin: 20px auto;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  #player, #computer {
+    user-select: none; /* Empêche la sélection du texte */
+    -webkit-user-drag: none; /* Désactive le glisser-déposer sur WebKit */
+    -moz-user-select: none; /* Pour Firefox */
+    -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  }
+  
