@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 48H</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            position: relative;
+            overflow-x: hidden; /* Pour cacher le défilement horizontal du grand gif */
+        }
+        .container { 
+            text-align: center; 
+            z-index: 1;
+        }
+        h1 { 
+            font-size: 36px; 
+            color: #333; 
+            margin-bottom: 30px; 
+        }
+        button { 
+            font-size: 20px; 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            background-color: #4CAF50; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+        }
+        button:hover { 
+            background-color: #45a049; 
+        }
+        .gif-container { 
+            position: absolute; 
+            z-index: 0;
+        }
+        /* GIF de gauche du titre */
+        .left-gif { 
+            left: 10%;
+            top: 20%; /* Placer en diagonale en haut à gauche */
+        }
+        /* GIF de droite du titre */
+        .right-gif { 
+            right: 10%;
+            top: 20%; /* Placer en diagonale en haut à droite */
+        }
+        /* GIF en bas à gauche */
+        .bottom-left-gif { 
+            left: 10%;
+            bottom: 20%; /* Placer en diagonale en bas à gauche */
+        }
+        /* GIF en bas à droite */
+        .bottom-right-gif { 
+            right: 10%;
+            bottom: 20%; /* Placer en diagonale en bas à droite */
+        }
+        .gif-container img { 
+            width: 150px; 
+            height: auto; 
+        }
+        /* Grand GIF en bas */
+        .bottom-gif {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%; /* Le GIF prend toute la largeur */
+            height: auto;
+            animation: slide 15s linear infinite;
+            z-index: -1; /* Assure que le GIF soit derrière le contenu */
+        }
+        @keyframes slide {
+            0% { left: 100%; }
+            100% { left: -100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GIF à gauche du titre -->
+    <div class="gif-container left-gif">
+        <img src="../Assets/feu.gif" alt="Gif de gauche">
+    </div>
+
+    <!-- Contenu principal centré -->
+    <div class="container">
+        <h1>Challenge 48H</h1>
+        <button onclick="window.location.href='nextPage.html'">Commencer</button>
+    </div>
+
+    <!-- GIF à droite du titre -->
+    <div class="gif-container right-gif">
+        <img src="../Assets/feu.gif" alt="Gif de droite">
+    </div>
+
+    <!-- GIF en bas à gauche -->
+    <div class="gif-container bottom-left-gif">
+        <img src="../Assets/lampe.gif" alt="Gif en bas à gauche">
+    </div>
+
+    <!-- GIF en bas à droite -->
+    <div class="gif-container bottom-right-gif">
+        <img src="../Assets/lampe.gif" alt="Gif en bas à droite">
+    </div>
+
+    <!-- Grand GIF qui défile en bas -->
+    <div class="bottom-gif">
+        <img src="../Assets/squelette.gif" alt="Grand gif défilant">
+    </div>
+
+</body>
+</html>

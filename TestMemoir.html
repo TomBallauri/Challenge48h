@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Mémoire</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            justify-content: center;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #ccc;
+            border: 2px solid #333;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+        .correctSequence {
+            background-color: green;
+        }
+        #message {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        #startButton {
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+        #roundMessage {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        #nextButton {
+            display: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #introMessage {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jeu de Mémoire</h1>
+    <p id="introMessage">Pour valider ce mini-jeu, vous devez obtenir un score de 8 minimum. Vous pouvez être aidé par votre équipe.</p>
+    <div id="grid">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+    </div>
+    <button id="startButton" onclick="startGame()">Commencer</button>
+    <p id="message"></p>
+    <p id="roundMessage">Manche: 0</p>
+    <button id="nextButton" onclick="window.location.href = 'nextPage.html'">Suivant</button>
+
+    <script>
+        let sequence = [];
+        let userSequence = [];
+        let gameInProgress = false;
+        let currentStep = 0;
+        let round = 1;
+        const targetRounds = 6;
+        const requiredScore = 8;
+
+        const cells = document.querySelectorAll('.cell');
+        const messageElement = document.getElementById('message');
+        const startButton = document.getElementById('startButton');
+        const roundMessageElement = document.getElementById('roundMessage');
+        const nextButton = document.getElementById('nextButton');
+
+        function startGame() {
+            sequence = [];
+            userSequence = [];
+            gameInProgress = true;
+            round = 1;
+            startButton.style.display = 'none';
+            roundMessageElement.innerText = `Manche: ${round}`;
+            nextButton.style.display = 'none';
+            nextRound();
+        }
+
+        function nextRound() {
+            userSequence = [];
+            const randomIndex = Math.floor(Math.random() * 9);
+            sequence.push(randomIndex);
+            flashSequence();
+        }
+
+        function flashSequence() {
+            let i = 0;
+            const interval = setInterval(() => {
+                const currentCell = cells[sequence[i]];
+                currentCell.classList.add('highlight');
+                setTimeout(() => {
+                    currentCell.classList.remove('highlight');
+                }, 500);
+                
+                i++;
+                if (i === sequence.length) {
+                    clearInterval(interval);
+                    enableUserInput();
+                }
+            }, 1000);
+        }
+
+        function enableUserInput() {
+            cells.forEach(cell => {
+                cell.addEventListener('click', handleCellClick);
+            });
+        }
+
+        function handleCellClick(event) {
+            if (!gameInProgress) return;
+            
+            const clickedIndex = parseInt(event.target.getAttribute('data-index'));
+            userSequence.push(clickedIndex);
+            
+            event.target.classList.add('highlight');
+            setTimeout(() => {
+                event.target.classList.remove('highlight');
+            }, 300);
+
+            if (userSequence[userSequence.length - 1] !== sequence[userSequence.length - 1]) {
+                endGame('Tu as fait une erreur ! Le jeu recommence.');
+                return;
+            }
+
+            if (userSequence.length === sequence.length) {
+                if (userSequence.toString() === sequence.toString()) {
+                    correctSequence();
+                } else {
+                    endGame('Tu as fait une erreur ! Le jeu recommence.');
+                }
+            }
+        }
+
+        function correctSequence() {
+            cells.forEach(cell => {
+                cell.classList.add('correctSequence');
+            });
+
+            setTimeout(() => {
+                cells.forEach(cell => {
+                    cell.classList.remove('correctSequence');
+                });
+
+                if (round >= targetRounds) {
+                    messageElement.innerText = 'Félicitations ! Tu as réussi toutes les manches du défi.';
+                    gameInProgress = false;
+                    if (round >= requiredScore) {
+                        nextButton.style.display = 'inline-block';
+                    }
+                    startButton.style.display = 'inline-block';
+                } else {
+                    round++;
+                    roundMessageElement.innerText = `Manche: ${round}`;
+                    nextRound();
+                }
+            }, 1000);
+        }
+
+        function endGame(message) {
+            messageElement.innerText = message;
+            gameInProgress = false;
+            startButton.style.display = 'inline-block';
+            resetGrid();
+        }
+
+        function resetGrid() {
+            cells.forEach(cell => {
+                cell.removeEventListener('click', handleCellClick);
+            });
+        }
+    </script>
+</body>
+</html>
