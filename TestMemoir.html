@@ -50,11 +50,16 @@
             font-size: 18px;
             margin-bottom: 20px;
         }
+        #highscoreMessage {
+            font-size: 18px;
+            margin-top: 20px;
+            white-space: pre-line; /* Pour afficher chaque score sur une nouvelle ligne */
+        }
     </style>
 </head>
 <body>
     <h1>Jeu de Mémoire</h1>
-    <p id="introMessage">Pour valider ce mini-jeu, vous devez obtenir un score de 8 minimum. Vous pouvez être aidé par votre équipe.</p>
+    <p id="introMessage">Pour valider ce mini-jeu, vous devez obtenir un score de 9 minimum. Vous pouvez être aidé par votre équipe.</p>
     <div id="grid">
         <div class="cell" data-index="0"></div>
         <div class="cell" data-index="1"></div>
@@ -70,21 +75,24 @@
     <p id="message"></p>
     <p id="roundMessage">Manche: 0</p>
     <button id="nextButton" onclick="window.location.href = 'nextPage.html'">Suivant</button>
+    <p id="highscoreMessage"></p>
 
     <script>
         let sequence = [];
         let userSequence = [];
         let gameInProgress = false;
-        let currentStep = 0;
         let round = 1;
         const targetRounds = 6;
-        const requiredScore = 8;
+        const maxRounds = 20;
+        const requiredScore = 2;  // Changer le score requis à 9
+        let highscores = [0, 0, 0];  // Tableau pour les 3 meilleurs scores
 
         const cells = document.querySelectorAll('.cell');
         const messageElement = document.getElementById('message');
         const startButton = document.getElementById('startButton');
         const roundMessageElement = document.getElementById('roundMessage');
         const nextButton = document.getElementById('nextButton');
+        const highscoreMessage = document.getElementById('highscoreMessage');
 
         function startGame() {
             sequence = [];
@@ -94,6 +102,7 @@
             startButton.style.display = 'none';
             roundMessageElement.innerText = `Manche: ${round}`;
             nextButton.style.display = 'none';
+            highscoreMessage.innerText = '';  // Cacher le highscore avant que la partie ne soit terminée
             nextRound();
         }
 
@@ -162,13 +171,16 @@
                     cell.classList.remove('correctSequence');
                 });
 
-                if (round >= targetRounds) {
-                    messageElement.innerText = 'Félicitations ! Tu as réussi toutes les manches du défi.';
-                    gameInProgress = false;
-                    if (round >= requiredScore) {
-                        nextButton.style.display = 'inline-block';
+                if (round >= maxRounds) {
+                    messageElement.innerText = 'Tu as terminé les 9 manches, mais tu peux encore jouer !';
+                    // Mise à jour du highscore si nécessaire
+                    if (round > Math.min(...highscores)) {
+                        highscores.push(round);
+                        highscores.sort((a, b) => b - a);  // Trier les scores par ordre décroissant
+                        highscores = highscores.slice(0, 3);  // Garder uniquement les 3 meilleurs scores
                     }
-                    startButton.style.display = 'inline-block';
+                    displayHighscores();  // Afficher les meilleurs scores après la fin de la partie
+                    nextButton.style.display = 'inline-block';
                 } else {
                     round++;
                     roundMessageElement.innerText = `Manche: ${round}`;
@@ -182,12 +194,24 @@
             gameInProgress = false;
             startButton.style.display = 'inline-block';
             resetGrid();
+
+            // Mise à jour du highscore après la fin du jeu
+            if (round > Math.min(...highscores)) {
+                highscores.push(round);
+                highscores.sort((a, b) => b - a);  // Trier les scores par ordre décroissant
+                highscores = highscores.slice(0, 3);  // Garder uniquement les 3 meilleurs scores
+            }
+            displayHighscores();  // Afficher les meilleurs scores même en cas de défaite
         }
 
         function resetGrid() {
             cells.forEach(cell => {
                 cell.removeEventListener('click', handleCellClick);
             });
+        }
+
+        function displayHighscores() {
+            highscoreMessage.innerText = `Highscores:\n1. ${highscores[0]}\n2. ${highscores[1]}\n3. ${highscores[2]}`;
         }
     </script>
 </body>
