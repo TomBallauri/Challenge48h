@@ -14,6 +14,7 @@
         #nextButton { display: none; font-size: 16px; padding: 10px; margin: 10px; cursor: pointer; }
         #validateButton { display: none; font-size: 16px; padding: 10px; margin: 10px; cursor: pointer; }
         #scoreboard { display: none; margin-top: 20px; padding: 10px; border: 1px solid #000; width: 50%; margin-left: auto; margin-right: auto; background-color: #f9f9f9; }
+        #lostMessage { display: none; color: red; font-size: 20px; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -32,9 +33,10 @@
     </div>
     <p id="smallMessage">Il faut entrer le mot "Porte".</p>
     <button id="nextButton" onclick="goToNextPage()">Suivant</button>
+    <p id="lostMessage">Temps écoulé ! Vous avez perdu.</p>
 
     <script>
-        const phrase = "Dans un monde lointain, où les montagnes touchaient presque le ciel et les forêts semblaient cacher des secrets anciens...";
+        const phrase = "Dans un monde lointain, où les montagnes touchaient presque le ciel et les forêts semblaient cacher des secrets anciens, un voyageur solitaire se lança dans une aventure périlleuse. Chaque étape le rapprochait des mystères cachés, et chaque nouveau chemin semblait mener à un horizon inconnu. Les nuits étaient froides et les jours pleins de découvertes surprenantes, mais il avançait sans relâche, guidé par une vision qui ne cessait de grandir. C'était un défi, mais il savait qu'au bout de ce voyage, un trésor inestimable l'attendait. À la fin de son périple, il avait enfin trouvé ce qu'il cherchait, regardez en bas a droite de l'écran, mais il ne pouvait s'empêcher de penser aux leçons apprises sur le chemin.";
         const correctWord = "Porte";
         let startTime, timerInterval;
         let highScores = [Infinity, Infinity, Infinity];
@@ -48,6 +50,7 @@
             document.getElementById("smallMessage").style.display = "block";
             document.getElementById("validateButton").style.display = "inline-block";
             document.getElementById("scoreboard").style.display = "none";
+            document.getElementById("lostMessage").style.display = "none";
 
             startTime = new Date().getTime();
             let timeLeft = 200;
@@ -60,6 +63,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     document.getElementById("input").disabled = true;
+                    document.getElementById("lostMessage").style.display = "block";
                 } else {
                     document.getElementById("timer").innerText = `Temps: ${timeLeft.toFixed(2)}s`;
                 }
