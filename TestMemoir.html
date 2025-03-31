@@ -53,7 +53,7 @@
         #highscoreMessage {
             font-size: 18px;
             margin-top: 20px;
-            white-space: pre-line; /* Pour afficher chaque score sur une nouvelle ligne */
+            white-space: pre-line;
         }
     </style>
 </head>
@@ -82,10 +82,7 @@
         let userSequence = [];
         let gameInProgress = false;
         let round = 1;
-        const targetRounds = 6;
-        const maxRounds = 20;
-        const requiredScore = 2;  // Changer le score requis à 9
-        let highscores = [0, 0, 0];  // Tableau pour les 3 meilleurs scores
+        let inputEnabled = false;
 
         const cells = document.querySelectorAll('.cell');
         const messageElement = document.getElementById('message');
@@ -98,16 +95,18 @@
             sequence = [];
             userSequence = [];
             gameInProgress = true;
+            inputEnabled = false;
             round = 1;
             startButton.style.display = 'none';
             roundMessageElement.innerText = `Manche: ${round}`;
             nextButton.style.display = 'none';
-            highscoreMessage.innerText = '';  // Cacher le highscore avant que la partie ne soit terminée
+            highscoreMessage.innerText = '';
             nextRound();
         }
 
         function nextRound() {
             userSequence = [];
+            inputEnabled = false;
             const randomIndex = Math.floor(Math.random() * 9);
             sequence.push(randomIndex);
             flashSequence();
@@ -125,19 +124,19 @@
                 i++;
                 if (i === sequence.length) {
                     clearInterval(interval);
-                    enableUserInput();
+                    setTimeout(() => {
+                        inputEnabled = true;
+                    }, 500);
                 }
             }, 1000);
         }
 
-        function enableUserInput() {
-            cells.forEach(cell => {
-                cell.addEventListener('click', handleCellClick);
-            });
-        }
+        cells.forEach(cell => {
+            cell.addEventListener('click', handleCellClick);
+        });
 
         function handleCellClick(event) {
-            if (!gameInProgress) return;
+            if (!gameInProgress || !inputEnabled) return;
             
             const clickedIndex = parseInt(event.target.getAttribute('data-index'));
             userSequence.push(clickedIndex);
@@ -153,15 +152,12 @@
             }
 
             if (userSequence.length === sequence.length) {
-                if (userSequence.toString() === sequence.toString()) {
-                    correctSequence();
-                } else {
-                    endGame('Tu as fait une erreur ! Le jeu recommence.');
-                }
+                correctSequence();
             }
         }
 
         function correctSequence() {
+            inputEnabled = false;
             cells.forEach(cell => {
                 cell.classList.add('correctSequence');
             });
@@ -170,48 +166,10 @@
                 cells.forEach(cell => {
                     cell.classList.remove('correctSequence');
                 });
-
-                if (round >= maxRounds) {
-                    messageElement.innerText = 'Tu as terminé les 9 manches, mais tu peux encore jouer !';
-                    // Mise à jour du highscore si nécessaire
-                    if (round > Math.min(...highscores)) {
-                        highscores.push(round);
-                        highscores.sort((a, b) => b - a);  // Trier les scores par ordre décroissant
-                        highscores = highscores.slice(0, 3);  // Garder uniquement les 3 meilleurs scores
-                    }
-                    displayHighscores();  // Afficher les meilleurs scores après la fin de la partie
-                    nextButton.style.display = 'inline-block';
-                } else {
-                    round++;
-                    roundMessageElement.innerText = `Manche: ${round}`;
-                    nextRound();
-                }
+                round++;
+                roundMessageElement.innerText = `Manche: ${round}`;
+                nextRound();
             }, 1000);
-        }
-
-        function endGame(message) {
-            messageElement.innerText = message;
-            gameInProgress = false;
-            startButton.style.display = 'inline-block';
-            resetGrid();
-
-            // Mise à jour du highscore après la fin du jeu
-            if (round > Math.min(...highscores)) {
-                highscores.push(round);
-                highscores.sort((a, b) => b - a);  // Trier les scores par ordre décroissant
-                highscores = highscores.slice(0, 3);  // Garder uniquement les 3 meilleurs scores
-            }
-            displayHighscores();  // Afficher les meilleurs scores même en cas de défaite
-        }
-
-        function resetGrid() {
-            cells.forEach(cell => {
-                cell.removeEventListener('click', handleCellClick);
-            });
-        }
-
-        function displayHighscores() {
-            highscoreMessage.innerText = `Highscores:\n1. ${highscores[0]}\n2. ${highscores[1]}\n3. ${highscores[2]}`;
         }
     </script>
 </body>
