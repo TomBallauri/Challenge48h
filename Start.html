@@ -1,120 +1,133 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challenge 48H</title>
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-            position: relative;
-            overflow-x: hidden; /* Pour cacher le défilement horizontal du grand gif */
-        }
-        .container { 
-            text-align: center; 
-            z-index: 1;
-        }
-        h1 { 
-            font-size: 36px; 
-            color: #333; 
-            margin-bottom: 30px; 
-        }
-        button { 
-            font-size: 20px; 
-            padding: 10px 20px; 
-            cursor: pointer; 
-            background-color: #4CAF50; 
-            color: white; 
-            border: none; 
-            border-radius: 5px; 
-        }
-        button:hover { 
-            background-color: #45a049; 
-        }
-        .gif-container { 
-            position: absolute; 
-            z-index: 0;
-        }
-        /* GIF de gauche du titre */
-        .left-gif { 
-            left: 10%;
-            top: 20%; /* Placer en diagonale en haut à gauche */
-        }
-        /* GIF de droite du titre */
-        .right-gif { 
-            right: 10%;
-            top: 20%; /* Placer en diagonale en haut à droite */
-        }
-        /* GIF en bas à gauche */
-        .bottom-left-gif { 
-            left: 10%;
-            bottom: 20%; /* Placer en diagonale en bas à gauche */
-        }
-        /* GIF en bas à droite */
-        .bottom-right-gif { 
-            right: 10%;
-            bottom: 20%; /* Placer en diagonale en bas à droite */
-        }
-        .gif-container img { 
-            width: 150px; 
-            height: auto; 
-        }
-        /* Grand GIF en bas */
-        .bottom-gif {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%; /* Le GIF prend toute la largeur */
-            height: auto;
-            animation: slide 15s linear infinite;
-            z-index: -1; /* Assure que le GIF soit derrière le contenu */
-        }
-        @keyframes slide {
-            0% { left: 100%; }
-            100% { left: -100%; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challenge 48H</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Raleway', sans-serif;
+      color: white;
+      overflow: hidden;
+      position: relative;
+    }
+    .container {
+      text-align: center;
+      z-index: 1;
+      max-width: 90%;
+      animation: fadeInDown 1s ease-out;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #ffcb05;
+      text-shadow: 0 0 15px #ff5722;
+    }
+    p.subtext {
+      font-size: 1.5rem;
+      margin-bottom: 40px;
+      color: #e0e0e0;
+      animation: fadeIn 2s ease-out;
+    }
+    .btn-start {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 10px;
+      background: #ff5722;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(255,87,34,0.6);
+    }
+    .btn-start:hover {
+      background: #ff7043;
+      transform: scale(1.05);
+    }
+    .rules-box {
+      margin-top: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(5px);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInUp 1.2s ease;
+    }
+    .rules-box h2 {
+      font-family: 'Orbitron';
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+      color: #fff176;
+    }
+    .rules-box p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #e0e0e0;
+    }
+    .gif-container img {
+      position: absolute;
+      width: 150px;
+      height: auto;
+      z-index: 0;
+      animation: pulse 2s infinite;
+    }
+    .gif-left {
+      top: 15%;
+      left: 5%;
+    }
+    .gif-right {
+      top: 15%;
+      right: 5%;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Contenu principal centré -->
-    <div class="container">
-        <h1>Challenge 48H</h1>
-        <button onclick="window.location.href='Regles.html'">Commencer</button>
-    </div>
+  <!-- GIF feu gauche -->
+  <img class="gif-container gif-left" src="../Assets/feu.gif" alt="feu gauche">
 
-    <!-- GIF à gauche du titre -->
-    <div class="gif-container left-gif">
-        <img src="../Assets/feu.gif" alt="Gif de gauche">
-    </div>
+  <!-- GIF feu droite -->
+  <img class="gif-container gif-right" src="../Assets/feu.gif" alt="feu droite">
 
+  <div class="container">
+    <h1 class="animate__animated animate__fadeInDown">Challenge 48H</h1>
+    <p class="subtext animate__animated animate__fadeIn">Bienvenue sur notre Challenge</p>
+    <button class="btn-start animate__animated animate__pulse animate__infinite" onclick="window.location.href='Snake.html'">
+      Commencer
+    </button>
 
-    <!-- GIF à droite du titre -->
-    <div class="gif-container right-gif">
-        <img src="../Assets/feu.gif" alt="Gif de droite">
+    <div class="rules-box">
+      <h2>Règles du Challenge</h2>
+      <p>
+        Vous avez 48 heures pour accomplir une série d'épreuves uniques. Chaque étape vous rapprochera de la victoire.
+        Soyez rapide, créatif et stratégique. Bonne chance, challenger !
+      </p>
     </div>
-
-    <!-- GIF en bas à gauche -->
-    <div class="gif-container bottom-left-gif">
-        <img src="../Assets/lampe.gif" alt="Gif en bas à gauche">
-    </div>
-
-    <!-- GIF en bas à droite -->
-    <div class="gif-container bottom-right-gif">
-        <img src="../Assets/lampe.gif" alt="Gif en bas à droite">
-    </div>
-
-    <!-- Grand GIF qui défile en bas -->
-    <div class="bottom-gif">
-        <img src="../Assets/squelette.gif" alt="Grand gif défilant">
-    </div>
+  </div>
 
 </body>
 </html>
