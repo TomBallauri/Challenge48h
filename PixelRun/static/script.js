@@ -164,11 +164,39 @@ function endGame(message) {
   gameStarted = false;
   clearInterval(computerInterval);
   stopDistanceTracking();
-  alert(message);
 
   let finalDistance = playerPosition - computerPosition;
-  updateBestScores(finalDistance);
+  updateBestScores(finalDistance); // Mise à jour des meilleurs scores
+
+  // Afficher la pop-up correspondante selon le message
+  if (message.includes("Vous avez gagné")) {
+    showWinPopup(); // Afficher la pop-up de victoire
+  } else {
+    showLosePopup(); // Afficher la pop-up de défaite
+  }
 }
+
+// Fonction pour afficher et fermer les pop-ups
+function showWinPopup() {
+  document.getElementById("victory-popup").style.display = "block";
+}
+
+function closeWinPopup() {
+  document.getElementById("victory-popup").style.display = "none";
+}
+
+function showLosePopup() {
+  document.getElementById("lose-popup").style.display = "block";
+}
+
+function closeLosePopup() {
+  document.getElementById("lose-popup").style.display = "none";
+}
+
+// Fermer la pop-up de victoire en cliquant sur le bouton
+document.getElementById("close-popup").addEventListener("click", closeWinPopup);
+document.getElementById("close-lose-popup").addEventListener("click", closeLosePopup);
+
 
 // Afficher les scores au chargement de la page
 document.addEventListener("DOMContentLoaded", displayBestScores);

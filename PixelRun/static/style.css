@@ -203,3 +203,81 @@ button:disabled {
   background-color: #ccc; /* Gris lorsque le bouton est désactivé */
   cursor: not-allowed;
 }
+
+/* Pop-up de victoire */
+#victory-popup {
+  display: none; /* Cachée par défaut */
+  position: fixed; /* Positionnée au centre de l'écran */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrage exact */
+  width: 300px; /* Largeur fixe */
+  background-color: rgba(0, 0, 0, 0.7); /* Fond semi-transparent */
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 1000; /* Assure qu'elle reste au-dessus du reste du contenu */
+}
+
+#victory-popup h2 {
+  background-color: #28a745; /* Fond vert pour la victoire */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+
+#victory-popup button {
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 32%;
+}
+
+#victory-popup button:hover {
+  background-color: #0056b3;
+}
+
+/* Pop-up de défaite */
+#lose-popup {
+  display: none; /* Cachée par défaut */
+  position: fixed; /* Positionnée au centre de l'écran */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrage exact */
+  width: 300px; /* Largeur fixe */
+  background-color: rgba(0, 0, 0, 0.7); /* Fond semi-transparent */
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 1000; /* Assure qu'elle reste au-dessus du reste du contenu */
+}
+
+#lose-popup h2 {
+  background-color: #dc3545; /* Fond rouge pour la défaite */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+
+#lose-popup button {
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 32%;
+}
+
+#lose-popup button:hover {
+  background-color: #0056b3;
+}
