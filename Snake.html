@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <link href="../static/css/snake.css" rel="stylesheet" type="text/css" />
+        <link rel="icon" href="../img/snake.png">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <title>SNAKE</title>
+        <script src="../static/js/snake.js"></script>
+    </head>
+    <style>
+        @import url(./set.css);
+
+        html{
+            margin:0;
+            background-color: var(--couleur_fond);
+            color:black;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        #snake_jeu{
+            background-color: var(--couleur_principale);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1000px;
+            height: 720px;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        #case_container{
+            margin: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            /* border: 1px solid black; */
+        }
+
+        .swal-footer {
+            text-align: center !important;
+        }
+
+        #game-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; /* espace entre les 2 blocs */
+            margin-top: 30px;
+        }
+
+        #highscores {
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            text-align: left;
+        }
+
+        #highscores h2 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        #score-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .rank-icon {
+            margin-right: 8px;
+            font-size: 1.3em;
+        }
+
+        .gold { color: gold; }
+        .silver { color: silver; }
+        .bronze { color: #cd7f32; }
+
+
+        .row {
+            display: flex;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .case {
+            transition: transform 0.1s ease-in-out;
+            box-sizing: border-box;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ffffff;
+        }
+
+        .snake {
+            transition: transform 0.1s ease-in-out;
+            background-color: green;
+            border: none 0px;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: black;
+            text-align: center;
+            top: 30px;
+            position: relative;
+        }
+
+        .logo{
+            width: 60%;
+            position: relative;
+            bottom: 10px;
+            background-color: black;
+        }
+
+        #popup {
+            position: fixed;
+            width: 300px;
+            height: 250px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--couleur_fond);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(7px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        #popup p{
+            text-align: center;
+            margin: center;
+            position: relative;
+            top: 20px;
+            margin-top: 30px;
+            font-size: 1.2em;
+            font-family: 'Montserrat', sans-serif;
+            color: black;
+        }
+
+        #popup button {
+            padding: 10px;
+            top: 50px;
+            left: 25%;
+            margin: center;
+            position: relative;
+            border-radius: 10px;
+            background-color: red;
+            width: 50%;
+            height: 15%;
+            color: white;
+            border: black 2px;
+            transition: 0.3s;
+        }
+
+        #popup button:hover {
+            background-color: var(--couleur_principale);
+            border: black 2px;
+            color: var(--couleur_texte_principal);
+            transform: translateY(-5px);
+            color: red;
+            box-shadow: 0 10px 20px rgba(27, 27, 27, .5);
+        }
+
+        .popup-toggle {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #00c853;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 9999;
+            animation: fadeInUp 1s;
+            display: none;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+
+        .apple{
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        #aff p{
+            font-size: 2em;
+            color: black;
+            text-align: center;
+            top: 700px;
+            position: relative;
+        }
+
+        .headup{
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+        }
+
+        .headdown{
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+        }
+
+        .headright{
+            border-bottom-right-radius: 50%;
+            border-top-right-radius: 50%;
+        }
+
+        .headleft{
+            border-top-left-radius: 50%;
+            border-bottom-left-radius: 50%;
+        }
+
+        .coinHG{
+            border-top-left-radius: 50%;
+        }
+
+        .coinHD{
+            border-top-right-radius: 50%;
+        }
+
+        .coinBG{
+            border-bottom-left-radius: 50%;
+        }
+
+        .coinBD{
+            border-bottom-right-radius: 50%;
+        }
+    </style>
+    <body>
+        <h1>JEU DU SNAKE</h1>
+
+        <div id="game-wrapper">
+            
+            <form id="snake_jeu">
+                <div id="case_container"></div>
+            </form>
+        </div>
+        
+        <div id="highscores">
+            <h2>Top 3</h2>
+            <ol id="score-list"></ol>
+        </div>
+        
+        <div id="popup-toggle" class="popup-toggle">📢 Afficher popup</div>
+
+        <div id="aff">
+            <p>Score: <span id="scoreMenu"></span></p>
+        </div>
+
+    
+        <div id="alert-toggle" style="display: none;">Afficher Message</div>
+
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script>
+            
+            document.addEventListener("DOMContentLoaded", function() {
+
+            let jeu = null; 
+            let popupType = null;
+
+            function showPopup(type) {
+                popupType = type;
+
+                if (type === "start") {
+                    swal({
+                        title: "Bienvenue 👋",
+                        text: "Prêt pour un jeu de Snake ?",
+                        icon: "info",
+                        buttons: {
+                            start: {
+                                text: "Commencer !",
+                                value: "start",
+                            }
+                        },
+                        closeOnClickOutside: true,
+                        closeOnEsc: true
+                    }).then((value) => {
+                        if (value === "start") {
+                            jeu = setInterval(update, 100);
+                        }
+                        document.getElementById("popup-toggle").style.display = "block";
+                    });
+
+                } else if (type === "lose") {
+                    swal({
+                        title: "Dommage 😢",
+                        text: "Vous avez perdu avec un score de " + Score + ". Réessayez !",
+                        icon: "error",
+                        buttons: {
+                            retry: {
+                                text: "Rejouer",
+                                value: "retry",
+                            }
+                        },
+                        closeOnClickOutside: true,
+                        closeOnEsc: true
+                    }).then((value) => {
+                        if (value === "retry") {
+                            location.reload();
+                        }
+                        document.getElementById("popup-toggle").style.display = "block";
+                    });
+
+                } else if (type === "win") {
+                    swal({
+                        title: "Félicitations 🎉",
+                        text: "Vous avez gagné avec un score de " + Score + " !",
+                        icon: "success",
+                        buttons: {
+                            retry: {
+                                text: "Rejouer",
+                                value: "retry",
+                            },
+                            next: {
+                                text: "Page suivante",
+                                value: "next",
+                            }
+                        },
+                        closeOnClickOutside: true,
+                        closeOnEsc: true
+                    }).then((value) => {
+                        if (value === "retry") {
+                            location.reload();
+                        } else if (value === "next") {
+                            window.location.href = "next_page.html";
+                        }
+                        document.getElementById("popup-toggle").style.display = "block";
+                    });
+                }
+            }
+
+
+            document.getElementById("popup-toggle").addEventListener("click", () => {
+                if (popupType) {
+                    showPopup(popupType);
+                }
+            });
+
+            showPopup("start");
+
+            const gameBoard = document.getElementById('case_container');
+            for (let i = 0; i < 17; i++) {
+                const row = document.createElement('div');
+                row.classList.add('row');
+                gameBoard.appendChild(row);
+                
+                for (let j = 0; j < 24; j++) {
+                    const caseElement = document.createElement('div');
+                    caseElement.classList.add('case');
+                    caseElement.setAttribute('id', `${j}-${i}`);
+                    row.appendChild(caseElement);
+                }
+            }
+
+            var CHEMIN_IMG_SNAKE = "../img/snake_graphics/"
+            var IMGapple = document.createElement("img"); IMGapple.src = CHEMIN_IMG_SNAKE+"apple.png";
+
+            const snake = [{ x: 4, y: 2 },
+                { x: 3, y: 2 },
+                { x: 2, y: 2 }];
+                
+            let direction = 'right';
+            let Score = 0;
+            GiveScore(Score)
+            var end = false;
+            var apple = AffRandomApple(snake);
+                
+            window.addEventListener("keydown", function(event) {
+
+                // Si la touche "d" est enfoncée
+                if (event.code === "KeyD" && direction != 'left' && (snake[0].x+1 != snake[1].x)) { // 68 est le code de la touche "d"
+                    direction = 'right'
+                }
+                    
+                // Si la touche "d" est enfoncée
+                if (event.code === "KeyW" && direction != 'down' && (snake[0].y+1 != snake[1].y)) { // 122 est le code de la touche "z"
+                    direction = 'up'
+                }
+                    
+                // Si la touche "d" est enfoncée
+                if (event.code === "KeyS" && direction != 'up' && (snake[0].y-1 != snake[1].y)) { // 115 est le code de la touche "s"   
+                    direction = 'down'
+                }
+                    
+                // Si la touche "d" est enfoncée
+                if (event.code === "KeyA" && direction != 'right' && (snake[0].x-1 != snake[1].x)) { // 113 est le code de la touche "q"
+                    direction = 'left'
+                }
+                
+            });
+                
+                
+            function update() {
+                // Mettre à jour la position du serpent
+                const head = { x: snake[0].x, y: snake[0].y };
+
+                switch (direction) {
+                    case 'up':
+                        head.y--;
+                        break;
+                    case 'down':
+                        head.y++;
+                        break;
+                    case 'left':
+                        head.x--;
+                        break;
+                    case 'right':
+                        head.x++;
+                        break;
+                }        
+                
+                snake.unshift(head);
+
+                IsEnd(head,snake);
+                                    
+                if (end != true){
+                    // Effacer le gameboard
+                    gameBoard.querySelectorAll('.snake').forEach(segment => {
+                        segment.classList.remove('snake');
+                        segment.classList.remove('headup');
+                        segment.classList.remove('headright');
+                        segment.classList.remove('headleft');
+                        segment.classList.remove('headdown');
+                        segment.classList.remove('coinHD');
+                        segment.classList.remove('coinHG');
+                        segment.classList.remove('coinBD');
+                        segment.classList.remove('coinBG');
+                    });
+                                        
+                    // Dessiner le serpent sur le gameboard
+                    snake.forEach(segment => {
+                        const caseSnake = document.getElementById(`${segment.x}-${segment.y}`);
+                        caseSnake.classList.add('snake');
+                    });
+
+                    
+                    const caseHead = document.getElementById(`${head.x}-${head.y}`);
+                    switch (direction) {
+                        case 'up':
+                            caseHead.classList.add('headup');
+                            break;
+                        case 'down':
+                            caseHead.classList.add('headdown');
+                            break;
+                        case 'left':
+                            caseHead.classList.add('headleft');
+                            break;
+                        case 'right':
+                            caseHead.classList.add('headright');
+                            break;
+                    }
+
+                    const behind = snake[snake.length-2];
+                    const tail = snake[snake.length-1];
+                    const caseTail = document.getElementById(`${snake[snake.length-1].x}-${snake[snake.length-1].y}`);
+                    if (tail.x-1 == behind.x){
+                        caseTail.classList.add('headright');
+                    } else if (tail.x+1 == behind.x){
+                        caseTail.classList.add('headleft');
+                    } else if (tail.y-1 == behind.y){
+                        caseTail.classList.add('headdown');
+                    } else if (tail.y+1 == behind.y){
+                        caseTail.classList.add('headup');
+                    } 
+
+
+                    for (i=1; i<snake.length-1; i++){
+                        const caseSnake = document.getElementById(`${snake[i].x}-${snake[i].y}`);
+                        if ( ((snake[i-1].x == snake[i].x-1) && (snake[i+1].y == snake[i].y+1)) || ((snake[i-1].y == snake[i].y+1) && (snake[i+1].x == snake[i].x-1)) ){
+                            caseSnake.classList.add('coinHD');
+                        } if ( ((snake[i-1].x == snake[i].x+1) && (snake[i+1].y == snake[i].y+1)) || ((snake[i-1].y == snake[i].y+1) && (snake[i+1].x == snake[i].x+1)) ){
+                            caseSnake.classList.add('coinHG');
+                        } if ( ((snake[i-1].x == snake[i].x-1) && (snake[i+1].y == snake[i].y-1)) || ((snake[i-1].y == snake[i].y-1) && (snake[i+1].x == snake[i].x-1)) ){
+                            caseSnake.classList.add('coinBD');
+                        } if ( ((snake[i+1].x == snake[i].x+1) && (snake[i-1].y == snake[i].y-1)) || ((snake[i-1].x == snake[i].x+1) && (snake[i+1].y == snake[i].y-1)) ){
+                            caseSnake.classList.add('coinBG');
+                        }
+                    }
+
+                                        
+                    if (head.x == apple.x && head.y == apple.y){
+                        Score++;
+                        GiveScore(Score);
+                        const caseApple = document.getElementById(`${apple.x}-${apple.y}`);
+                        caseApple.removeChild(IMGapple);
+                        apple = AffRandomApple(snake)
+                    }else{
+                        snake.pop();
+                    }
+                }                  
+            }
+                                
+            function IsEnd(head,snake) {
+                if (head.x == -1 && direction == "left"){
+                    end = true;
+                } else if (head.x == 24 && direction == "right"){
+                    end = true;
+                }else if (head.y == -1 && direction == "up"){
+                    end = true;
+                }else if (head.y == 17 && direction == "down"){
+                    end = true;
+                }
+                                    
+                for (var i=1; i < snake.length; i++){
+                    if (head.x == snake[i].x && head.y == snake[i].y){
+                        end = true
+                    }
+                }
+                if (end){
+                    clearInterval(jeu);
+                    afficherPopup();
+                }
+            }
+
+            function AffRandomApple(snake){
+                var repeat = 1;
+                const randomX = Math.floor(Math.random() * 24);
+                const randomY = Math.floor(Math.random() * 17);
+                while (repeat) {
+                    const randomX = Math.floor(Math.random() * 24);
+                    const randomY = Math.floor(Math.random() * 17);
+                    console.log(snake.includes({x:randomX,y:randomY}))
+                    if (!snake.includes({x:randomX,y:randomY})){
+                        repeat = 0;
+                    }
+                }
+                const caseApple = document.getElementById(`${randomX}-${randomY}`);
+                caseApple.appendChild(IMGapple);
+                return  {x: randomX, y: randomY };
+            }
+
+            function GiveScore(score) {
+                const scoreElement = document.getElementById("scoreMenu");
+                if (scoreElement) {
+                    scoreElement.innerHTML = score;
+                }
+
+                // updateHighScores(score);
+            }
+
+            updateHighScores(0);
+
+
+            function updateHighScores(score) {
+                let scores = JSON.parse(localStorage.getItem("highScores")) || [];
+                scores.push(score);
+                scores.sort((a, b) => b - a);
+                scores = scores.slice(0, 3);
+                localStorage.setItem("highScores", JSON.stringify(scores));
+
+                const scoreList = document.getElementById("score-list");
+                const medals = ['🥇', '🥈', '🥉'];
+                scoreList.innerHTML = '';
+                scores.forEach((s, i) => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `<span class="rank-icon">${medals[i]}</span> ${s}`;
+                    scoreList.appendChild(li);
+                });
+            }
+
+
+            function afficherPopup() {
+                updateHighScores(Score); 
+
+                if (Score < 20) {
+                    showPopup("lose");
+                } else {
+                    showPopup("win");
+                }
+            }
+            });
+        </script>
+    </body>
+</html>
