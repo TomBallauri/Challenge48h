@@ -7,13 +7,21 @@
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <h1>Reaction Time Test</h1>
-    <p>Click when the screen turns green!</p>
-    <!-- <button id="startBtn">Start</button> -->
-    <div id="testArea">Click to Start</div>
-    <p id="result"></p>
-    <p id="highScore">Best Time: -- ms</p>                      
+    <div class="container">
+        <h1>Test de réactivité</h1>
 
-    <script src="main.js"></script>
+        <!-- Zone de test -->
+        <div id="testArea" class="gray">Cliquer pour commencer</div>
+        
+        <!-- Tableau des scores -->
+        <div id="scoreboard">
+            <h2>Top 3 Scores</h2>
+            <div id="scoreList">
+            </div>
+            <button id="resetButton">Réinitialiser les Scores</button>
+        </div>
+    </div>
+
+    <script src="reaction_time.js"></script>
 </body>
 </html>

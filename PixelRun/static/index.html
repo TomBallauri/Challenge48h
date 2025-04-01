@@ -7,6 +7,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Pop-up de victoire -->
+<div id="victory-popup" style="display:none;">
+  <h2>Vous avez gagné !</h2>
+  <button id="close-popup">Fermer</button>
+</div>
+
+<!-- Pop-up de défaite -->
+<div id="lose-popup" style="display:none;">
+  <h2>Vous avez perdu !</h2>
+  <button id="close-lose-popup">Fermer</button>
+</div>
+
   <!-- Header -->
   <div class="header">
     <h1>Course de Pixel - Challenge 48H</h1>
@@ -25,9 +37,8 @@
 
     <!-- Scoreboard -->
     <div class="scoreboard">
-      <h3>Distance</h3>
+      <h3>Distance avec l'ordinateur</h3>
         <p id="score">0</p>
-        <p id="progression"></p> <!-- Espace pour afficher l'écart -->
         <p>Meilleurs Scores :</p>
           <ul id="best-scores"></ul>
     </div>

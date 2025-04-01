@@ -6,23 +6,23 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #fff; /* Fond de la page en blanc */
+  background-color: #fff; 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   height: 100vh;
-  padding-top: 70px; /* Espacement pour le header */
+  padding-top: 70px; 
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%; /* Prend toute la largeur du viewport */
-  background-color: #2d6a4f; /* Vert sobre pour le header */
-  padding: 15px 30px; /* Un peu plus de padding pour occuper toute la hauteur */
-  position: fixed; /* Fixe le header en haut de la page */
+  width: 100%; 
+  background-color: #2d6a4f; 
+  padding: 15px 30px; 
+  position: fixed; 
   top: 0;
   left: 0;
   z-index: 1000; /* Assure que le header soit toujours au-dessus du contenu */
@@ -30,22 +30,22 @@ body {
 
 h1 {
   font-size: 1.8rem;
-  color: #fff; /* Texte en blanc */
+  color: #fff; 
 }
 
 button {
-  background-color: #4caf50; /* Vert pour le bouton */
+  background-color: #4caf50; 
   color: white;
   padding: 10px 20px;
   font-size: 1rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Transition pour le hover */
+  transition: background-color 0.3s ease; 
 }
 
 button:hover {
-  background-color: #45a049; /* Vert plus clair lors du survol */
+  background-color: #45a049;
 }
 
 button:disabled {
@@ -53,12 +53,28 @@ button:disabled {
   background-color: #ccc;
 }
 
+/* Info-bulle d'aide */
+#help-container {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: none;
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* Section principale avec règles et scoreboard */
 .main-content {
   display: flex;
   justify-content: space-between;
-  width: 80%; /* Largeur du contenu principal */
-  margin-top: 100px; /* Espacement sous le header */
+  width: 80%; 
+  margin-top: 100px; 
 }
 
 .rules {
@@ -103,14 +119,17 @@ button:disabled {
   font-weight: bold;
 }
 
-/* Ajout pour l'écart de progression */
-#progression {
-  font-size: 1.2rem;
-  color: #ff9800; /* Une couleur orange pour l'écart */
-  font-weight: normal;
+#score {
   margin-top: 10px;
 }
 
+#best-scores {
+  font-size: 1.2rem;
+  color: #407851; 
+  font-weight: normal;
+  margin-top: 30px;
+  padding: 3% 20%;
+}
 
 /* Zone de jeu */
 .track {
@@ -137,7 +156,7 @@ button:disabled {
 
 .computer {
   left: 0;
-  bottom: 70px; /* Positionner l'emoji de l'ordinateur un peu plus haut que celui du joueur */
+  bottom: 70px; 
 }
 
 .finish-line {
@@ -183,4 +202,82 @@ button:disabled {
 #restart:disabled, #start:disabled {
   background-color: #ccc; /* Gris lorsque le bouton est désactivé */
   cursor: not-allowed;
+}
+
+/* Pop-up de victoire */
+#victory-popup {
+  display: none; /* Cachée par défaut */
+  position: fixed; /* Positionnée au centre de l'écran */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrage exact */
+  width: 300px; /* Largeur fixe */
+  background-color: rgba(0, 0, 0, 0.7); /* Fond semi-transparent */
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 1000; /* Assure qu'elle reste au-dessus du reste du contenu */
+}
+
+#victory-popup h2 {
+  background-color: #28a745; /* Fond vert pour la victoire */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+
+#victory-popup button {
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 32%;
+}
+
+#victory-popup button:hover {
+  background-color: #0056b3;
+}
+
+/* Pop-up de défaite */
+#lose-popup {
+  display: none; /* Cachée par défaut */
+  position: fixed; /* Positionnée au centre de l'écran */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrage exact */
+  width: 300px; /* Largeur fixe */
+  background-color: rgba(0, 0, 0, 0.7); /* Fond semi-transparent */
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 1000; /* Assure qu'elle reste au-dessus du reste du contenu */
+}
+
+#lose-popup h2 {
+  background-color: #dc3545; /* Fond rouge pour la défaite */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 24px;
+  text-align: center;
+}
+
+#lose-popup button {
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 32%;
+}
+
+#lose-popup button:hover {
+  background-color: #0056b3;
 }
