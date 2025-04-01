@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course de Pixel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            padding-top: 70px; 
+            background: linear-gradient(135deg, #222, #444);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;  
+            width: 100%; 
+            background-color: #2d6a4f; 
+            padding: 15px 30px; 
+            position: fixed; 
+            top: 0;
+            left: 0;
+            z-index: 1000; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #fff; 
+        }
+
+        button {
+            background-color: #4caf50; 
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; 
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            background-color: #ccc;
+        }
+
+        /* Section principale avec règles et scoreboard */
+        .main-content {
+        display: flex;
+        justify-content: space-between;
+        width: 80%; 
+        margin-top: 100px; 
+        }
+
+        .rules {
+        width: 45%;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .rules h2 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 10px;
+        }
+
+        .rules p {
+        font-size: 1.2rem;
+        color: #555;
+        line-height: 1.6;
+        }
+
+        .scoreboard {
+        width: 45%;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        }
+
+        .scoreboard h3 {
+        font-size: 1.5rem;
+        color: #333;
+        }
+
+        .scoreboard p {
+        font-size: 2rem;
+        color: #4caf50;
+        font-weight: bold;
+        }
+
+        #score {
+        margin-top: 10px;
+        }
+
+        #best-scores {
+        font-size: 1.2rem;
+        color: #407851; 
+        font-weight: normal;
+        margin-top: 30px;
+        padding: 3% 20%;
+        }
+
+        /* Zone de jeu */
+        .track {
+        position: relative;
+        width: 80%;
+        height: 150px;
+        background-color: #ddd;
+        margin: 4vh auto;
+        border-radius: 10px;
+        overflow: hidden;
+        }
+
+        .player, .computer {
+        font-size: 40px;
+        position: absolute;
+        bottom: 0;
+        padding: 0.5%;
+        user-select: none; /* Empêche la sélection de texte */
+        }
+
+        .player {
+        left: 0;
+        }
+
+        .computer {
+        left: 0;
+        bottom: 70px; 
+        }
+
+        .finish-line {
+        position: absolute;
+        right: 0%;
+        top: 0;
+        bottom: 0;
+        width: 10px;
+        background-color: #000;
+        z-index: 10;
+        }
+
+        /* Contrôles */
+        .controls {
+        margin-top: 20px;
+        }
+
+        #start, #restart {
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 5px;
+        border: none;
+        }
+
+        #start {
+        background-color: #4caf50;
+        }
+
+        #restart {
+        background-color: #ff9800;
+        }
+
+        #start:hover {
+        background-color: #45a049;
+        }
+
+        #restart:hover {
+        background-color: #e68900;
+        }
+
+        #restart:disabled, #start:disabled {
+        background-color: #ccc; /* Gris lorsque le bouton est désactivé */
+        cursor: not-allowed;
+        }
+
+        .main-content, .rules, .scoreboard, .controls {
+        animation: fadeInUp 1s ease-out;
+        }
+
+        .track {
+        background: repeating-linear-gradient(
+            45deg,
+            #333,
+            #333 10px,
+            #444 10px,
+            #444 20px
+        );
+        border: 3px dashed #fff;
+        box-shadow: inset 0 0 10px #000;
+        }
+
+        .player, .computer {
+        transition: transform 0.1s ease-in-out;
+        }
+
+        .player:hover, .computer:hover {
+        transform: scale(1.2);
+        }
+
+        button {
+        font-family: 'Press Start 2P', cursive;
+        box-shadow: 0 0 10px #4caf50;
+        }
+
+        #help-container {
+        animation: bounceInDown 0.6s ease forwards;
+        font-family: 'Press Start 2P', cursive;
+        }
+
+        .finish-line {
+        animation: pulse 2s infinite;
+        }
+
+        #best-scores {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+        }
+
+        #help-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.85);
+        color: #fff;
+        padding: 20px 30px;
+        border-radius: 12px;
+        font-size: 16px;
+        display: none;
+        text-align: center;
+        z-index: 9999;
+        font-family: 'Press Start 2P', cursive;
+        max-width: 80%;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        #best-scores li {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 10px auto;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            animation: fadeInLeft 0.5s ease forwards;
+            width: fit-content;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        #best-scores li:nth-child(1)::before {
+            content: "🥇";
+        }
+        #best-scores li:nth-child(2)::before {
+            content: "🥈";
+        }
+        #best-scores li:nth-child(3)::before {
+            content: "🥉";
+        }
+    </style>
+    </head>
+    <body>
+    <!-- Header -->
+    <div class="header animate__animated animate__fadeInDown">
+        <h1><i class="fa-solid fa-gamepad"></i> Course de Pixel - Challenge 48H</h1>
+        <button id="help"><i class="fa-solid fa-question"></i> Aide</button>
+      </div>
+    
+      <!-- Contenu principal -->
+      <div class="main-content">
+        <!-- Règles du jeu -->
+        <div class="rules">
+          <h2 style="font-family: 'Press Start 2P', cursive; font-size: 1rem;">Règles du jeu</h2>
+          <p>Bienvenue dans votre Challenge !</p>
+          <p>Vous contrôlez votre personnage avec la souris. L'ordinateur avance de manière aléatoire, mais vous devez tenter de terminer la course avant lui. Bonne chance !</p>
+          <p><strong>Important :</strong> Le jeu est conçu pour être joué de manière honnête. Toute tentative de triche via des moyens externes au jeu, comme la console de développement ou en modifiant le code, entrainera une annulation de la victoire.</p>
+        </div>
+    
+        <!-- Scoreboard -->
+        <div class="scoreboard">
+          <h3 style="font-family: 'Press Start 2P', cursive; font-size: 1rem;">Distance avec l'ordinateur</h3>
+          <p id="score">0</p>
+          <p>Meilleurs Scores :</p>
+          <ul id="best-scores"></ul>
+        </div>
+      </div>
+    
+      <!-- Zone de jeu -->
+      <div class="track">
+        <div class="player animate__animated animate__fadeInLeft" id="player">🏃‍♂️</div>
+        <div class="computer animate__animated animate__fadeInRight" id="computer">🤖</div>
+        <div class="finish-line" id="finish-line"></div>
+      </div>
+    
+      <!-- Contrôles -->
+      <div class="controls">
+        <button id="start"><i class="fa-solid fa-play"></i> Start</button>
+        <button id="restart" disabled><i class="fa-solid fa-rotate"></i> Rejouer</button>
+      </div>
+    
+      <script src="pixelrun/static/script.js"></script>
+      <script>
+        function endGame(message) {
+          gameStarted = false;
+          clearInterval(computerInterval);
+          stopDistanceTracking();
+    
+          let finalDistance = playerPosition - computerPosition;
+          updateBestScores(finalDistance);
+    
+          if (message.includes("gagné")) {
+            Swal.fire({
+              title: 'Félicitations !',
+              text: 'Vous avez gagné ! Vous pouvez passer au jeu suivant.',
+              icon: 'success',
+              confirmButtonText: 'Jeu Suivant',
+              customClass: {
+                title: 'swal-title',
+                confirmButton: 'swal-button'
+              }
+            });
+          } else {
+            Swal.fire({
+              title: 'Échec !',
+              text: 'L\'ordinateur a gagné. Essayez encore.',
+              icon: 'error',
+              confirmButtonText: 'Rejouer',
+              customClass: {
+                title: 'swal-title',
+                confirmButton: 'swal-button'
+              }
+            });
+          }
+        }
+      </script>
+    </body>
+</html>
