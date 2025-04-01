@@ -1,0 +1,33 @@
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin-top: 50px;
+}
+
+h1 {
+    color: #333;
+}
+
+#testArea {
+    width: 320px;
+    height: 180px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: gray;
+    color: white;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#highScore {
+    font-size: 18px;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #007bff;
+}
