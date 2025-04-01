@@ -32,8 +32,8 @@ resetButton.addEventListener("click", () => {
 });
 
 testArea.addEventListener("click", () => {
-    if (testArea.textContent === "Too soon! Wait for green.") {
-        testArea.textContent = "Click to Start";
+    if (testArea.textContent === "Trop tôt ! Attendez le vert.") {
+        testArea.textContent = "Cliquer pour commencer";
         testArea.style.backgroundColor = "gray";
         clearTimeout(timeout);
         return;
@@ -64,22 +64,22 @@ testArea.addEventListener("click", () => {
 
         setTimeout(() => {
             testArea.style.backgroundColor = "gray";
-            testArea.textContent = "Click to Start";
+            testArea.textContent = "Cliquer pour commencer";
         }, 5000);
-    } else if (testArea.textContent === "Click to Start" || testArea.style.backgroundColor === "gray") {
-        testArea.textContent = "Wait for green...";
+    } else if (testArea.textContent === "Cliquer pour commencer" || testArea.style.backgroundColor === "gray") {
+        testArea.textContent = "Attendez le vert...";
         testArea.style.backgroundColor = "red";
 
         const delay = Math.floor(Math.random() * 7000) + 1000;
         timeout = setTimeout(() => {
             testArea.style.backgroundColor = "green";
-            testArea.textContent = "Click Now!";
+            testArea.textContent = "Cliquez !";
             startTime = performance.now();
             canClickGreen = true;
         }, delay);
     } else {
-        if (testArea.textContent !== "Too soon! Wait for green.") {
-            testArea.textContent = "Too soon! Wait for green.";
+        if (testArea.textContent !== "Trop tôt ! Attendez le vert.") {
+            testArea.textContent = "Trop tôt ! Attendez le vert.";
             testArea.style.backgroundColor = "gray";
             clearTimeout(timeout);
         }
