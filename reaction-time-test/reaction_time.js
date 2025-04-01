@@ -5,13 +5,13 @@ let topScores = JSON.parse(localStorage.getItem("topScores")) || []; // Récupé
 const highScoreDisplay = document.getElementById("highScore");
 const testArea = document.getElementById("testArea");
 const scoreboard = document.getElementById("scoreboard");
+const nextGameButton = document.getElementById("nextGameButton"); // Nouveau bouton
 const resetButton = document.getElementById("resetButton");
 
 if (topScores.length > 0) {
     displayTopScores();
 }
 
-// Fonction pour afficher les scores
 function displayTopScores() {
     const scoreList = document.getElementById("scoreList");
     scoreList.innerHTML = ""; // Vider la liste des scores
@@ -24,15 +24,8 @@ function displayTopScores() {
     });
 }
 
-// Fonction pour réinitialiser les scores
-resetButton.addEventListener("click", () => {
-    topScores = []; // Réinitialiser le tableau des scores
-    localStorage.removeItem("topScores"); // Supprimer les scores du localStorage
-    displayTopScores(); // Mettre à jour l'affichage des scores
-});
-
 testArea.addEventListener("click", () => {
-    if (testArea.textContent === "Trop tôt ! Attendez le vert.") {
+    if (testArea.textContent === "Too soon! Wait for green.") {
         testArea.textContent = "Cliquer pour commencer";
         testArea.style.backgroundColor = "gray";
         clearTimeout(timeout);
@@ -42,6 +35,11 @@ testArea.addEventListener("click", () => {
     if (testArea.style.backgroundColor === "green" && canClickGreen) {
         endTime = performance.now();
         const reactionTime = Math.round(endTime - startTime);  // Arrondi à la ms près
+        if (reactionTime <= 320) {
+            nextGameButton.disabled = false; // Active le bouton
+        } else {
+            nextGameButton.disabled = true; // Désactive le bouton si le score est inférieur
+        }
 
         testArea.textContent = `⏱️ ${reactionTime} ms`;
 
@@ -66,6 +64,9 @@ testArea.addEventListener("click", () => {
             testArea.style.backgroundColor = "gray";
             testArea.textContent = "Cliquer pour commencer";
         }, 5000);
+
+        // Si le score est supérieur ou égal à 320, afficher le bouton "Passer au jeu suivant"
+
     } else if (testArea.textContent === "Cliquer pour commencer" || testArea.style.backgroundColor === "gray") {
         testArea.textContent = "Attendez le vert...";
         testArea.style.backgroundColor = "red";
@@ -73,15 +74,22 @@ testArea.addEventListener("click", () => {
         const delay = Math.floor(Math.random() * 7000) + 1000;
         timeout = setTimeout(() => {
             testArea.style.backgroundColor = "green";
-            testArea.textContent = "Cliquez !";
+            testArea.textContent = "Cliquez maintenant!";
             startTime = performance.now();
             canClickGreen = true;
         }, delay);
     } else {
-        if (testArea.textContent !== "Trop tôt ! Attendez le vert.") {
+        if (testArea.textContent !== "Too soon! Wait for green.") {
             testArea.textContent = "Trop tôt ! Attendez le vert.";
             testArea.style.backgroundColor = "gray";
             clearTimeout(timeout);
         }
     }
+});
+
+// Réinitialiser les scores
+resetButton.addEventListener("click", () => {
+    topScores = [];
+    localStorage.setItem("topScores", JSON.stringify(topScores));
+    displayTopScores();
 });
