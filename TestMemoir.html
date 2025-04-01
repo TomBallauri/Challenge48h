@@ -5,13 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeu de Mémoire</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+            overflow: hidden; /* Empêcher le scroll */
+        }
         #grid {
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-template-rows: repeat(3, 100px);
             gap: 10px;
             justify-content: center;
+            margin-bottom: 20px; /* Espacement entre la grille et les autres éléments */
         }
         .cell {
             width: 100px;
@@ -30,11 +42,15 @@
         #message {
             font-size: 20px;
             margin-top: 20px;
+            display: none;  /* Caché au début */
         }
         #startButton {
             padding: 10px 20px;
             cursor: pointer;
             margin-top: 30px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
         #roundMessage {
             font-size: 18px;
@@ -54,12 +70,62 @@
             font-size: 18px;
             margin-top: 20px;
             white-space: pre-line;
+            text-align: center; /* Centrer le texte des scores */
+            width: 200px;
+            margin-top: 20px;
+            display: none; /* Caché au début */
         }
+        .score {
+            margin: 5px 0;
+        }
+
+        /* Style de la popup */
+        #popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background-color: white;
+            border: 2px solid #333;
+            display: none;
+            z-index: 1000;
+        }
+
+        /* Barre en haut de la popup */
+        #popupHeader {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            text-align: right;
+            cursor: move;
+            position: relative;
+        }
+
+        /* Crois de fermeture dans la barre */
+        #popupClose {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #popup video {
+            width: 100%;
+            height: auto;
+        }
+
+        
     </style>
 </head>
 <body>
     <h1>Jeu de Mémoire</h1>
-    <p id="introMessage">Pour valider ce mini-jeu, vous devez obtenir un score de 9 minimum. Vous pouvez être aidé par votre équipe.</p>
+    <p id="introMessage">Pour valider ce mini-jeu, vous devez obtenir un score de 2 minimum. Vous pouvez être aidé par votre équipe.</p>
+    
     <div id="grid">
         <div class="cell" data-index="0"></div>
         <div class="cell" data-index="1"></div>
@@ -71,11 +137,26 @@
         <div class="cell" data-index="7"></div>
         <div class="cell" data-index="8"></div>
     </div>
-    <button id="startButton" onclick="startGame()">Commencer</button>
+    
+    <!-- Message de défaite au-dessus du bouton "Commencer" -->
     <p id="message"></p>
+    
+    <button id="startButton" onclick="startGame()">Commencer</button>
+    
+    <!-- Tableau des scores centré sous le bouton Commencer -->
+    <div id="highscoreMessage"></div> <!-- Tableau des scores sous le bouton Commencer -->
+    
     <p id="roundMessage">Manche: 0</p>
     <button id="nextButton" onclick="window.location.href = 'nextPage.html'">Suivant</button>
-    <p id="highscoreMessage"></p>
+
+    <!-- Popup vidéo -->
+    <div id="popup">
+        <div id="popupHeader">
+            Publicité
+            <span id="popupClose" onclick="closePopup()">X</span>
+        </div>
+        <video id="popupVideo" controls></video>
+    </div>
 
     <script>
         let sequence = [];
@@ -83,6 +164,7 @@
         let gameInProgress = false;
         let round = 1;
         let inputEnabled = false;
+        let topScores = [0, 0, 0]; // Les 3 meilleurs scores (par défaut)
 
         const cells = document.querySelectorAll('.cell');
         const messageElement = document.getElementById('message');
@@ -90,6 +172,9 @@
         const roundMessageElement = document.getElementById('roundMessage');
         const nextButton = document.getElementById('nextButton');
         const highscoreMessage = document.getElementById('highscoreMessage');
+        const popup = document.getElementById('popup');
+        const popupClose = document.getElementById('popupClose');
+        const popupVideo = document.getElementById('popupVideo');
 
         function startGame() {
             sequence = [];
@@ -101,6 +186,8 @@
             roundMessageElement.innerText = `Manche: ${round}`;
             nextButton.style.display = 'none';
             highscoreMessage.innerText = '';
+            highscoreMessage.style.display = 'none'; // Cache le tableau des scores
+            messageElement.style.display = 'none'; // Cache le message de défaite
             nextRound();
         }
 
@@ -146,6 +233,11 @@
                 event.target.classList.remove('highlight');
             }, 300);
 
+            // Affichage de la popup avec une probabilité de 1/3
+            if (Math.random() < 1 / 3) {
+                showPopup();
+            }
+
             if (userSequence[userSequence.length - 1] !== sequence[userSequence.length - 1]) {
                 endGame('Tu as fait une erreur ! Le jeu recommence.');
                 return;
@@ -170,6 +262,49 @@
                 roundMessageElement.innerText = `Manche: ${round}`;
                 nextRound();
             }, 1000);
+        }
+
+        function endGame(message) {
+            gameInProgress = false;
+            messageElement.innerText = message;
+            messageElement.style.display = 'block'; // Affiche le message de défaite
+            if (round >= 2) {
+                // Mise à jour du tableau des scores
+                updateHighScores(round - 1);
+                highscoreMessage.style.display = 'block'; // Affiche le tableau des scores
+            }
+            nextButton.style.display = (round - 1 >= 2) ? 'block' : 'none'; // Affiche le bouton suivant si le score est suffisant
+        }
+
+        // Affichage de la popup vidéo
+        function showPopup() {
+            const videos = ["../Assets/ads1.mp4", "../Assets/ads2.mp4", "../Assets/ads3.mp4"];
+            const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+            popupVideo.src = randomVideo;
+            popup.style.display = 'block';
+            // Met le jeu en pause
+            gameInProgress = false;
+        }
+
+        // Fermer la popup
+        function closePopup() {
+            popup.style.display = 'none';
+            gameInProgress = true; // Reprendre le jeu
+        }
+
+        // Mise à jour des scores
+        function updateHighScores(score) {
+            if (score > topScores[2]) {
+                topScores.push(score);
+                topScores.sort((a, b) => b - a);
+                topScores = topScores.slice(0, 3); // Garder seulement les 3 meilleurs
+            }
+
+            highscoreMessage.innerText = `
+1er : ${topScores[0]}
+2ème : ${topScores[1]}
+3ème : ${topScores[2]}
+`;
         }
     </script>
 </body>
