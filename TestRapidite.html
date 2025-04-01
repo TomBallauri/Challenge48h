@@ -1,108 +1,274 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test de Vitesse de Frappe</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        #timer { position: absolute; top: 10px; right: 10px; font-size: 18px; font-weight: bold; }
-        #phrase { font-size: 18px; margin: 20px; width: 80%; margin-left: auto; margin-right: auto; text-align: justify; }
-        #input { font-size: 16px; width: 80%; padding: 10px; }
-        button { font-size: 16px; margin: 10px; padding: 10px; cursor: pointer; }
-        #smallMessage { font-size: 8px; position: absolute; bottom: 5px; right: 5px; color: #d7d7d7d5; display: none; }
-        #nextButton { display: none; font-size: 16px; padding: 10px; margin: 10px; cursor: pointer; }
-        #validateButton { display: none; font-size: 16px; padding: 10px; margin: 10px; cursor: pointer; }
-        #scoreboard { display: none; margin-top: 20px; padding: 10px; border: 1px solid #000; width: 50%; margin-left: auto; margin-right: auto; background-color: #f9f9f9; }
-        #lostMessage { display: none; color: red; font-size: 20px; font-weight: bold; margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <div id="timer">Temps: 200.00s</div>
-    <h1>Test de Vitesse de Frappe</h1>
-    <p id="phrase">Cliquez sur "Commencer" pour débuter</p>
-    <input type="text" id="input" placeholder="Tapez ici..." disabled>
-    <br>
-    <button id="startButton" onclick="startGame()">Commencer</button>
-    <button id="validateButton" onclick="checkTyping()">Valider</button>
-    <div id="scoreboard">
-        <h2>Meilleurs Scores</h2>
-        <p><span id="score1">0.00</span> sec</p>
-        <p><span id="score2">0.00</span> sec</p>
-        <p><span id="score3">0.00</span> sec</p>
-    </div>
-    <p id="smallMessage">Il faut entrer le mot "Porte".</p>
-    <button id="nextButton" onclick="goToNextPage()">Suivant</button>
-    <p id="lostMessage">Temps écoulé ! Vous avez perdu.</p>
+    <head>
+        <meta charset="UTF-8">
+        <title>Test de Vitesse de Frappe</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            html, body {
+                height: 100%;
+                overflow: hidden;
+            }
+            body {
+                font-family: 'Roboto Mono', monospace;
+                background: linear-gradient(to right, #1B5E20, #43A047);
+                color: white;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .container {
+                width: 90%;
+                max-width: 800px;
+                background-color: rgba(0,0,0,0.2);
+                border-radius: 16px;
+                padding: 20px;
+                text-align: center;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                overflow: hidden;
+                position: relative;
+            }
+            h1 {
+                font-family: 'Press Start 2P', cursive;
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+            #timer, #hint {
+                position: fixed;
+                font-size: 16px;
+                background: rgba(0,0,0,0.3);
+                padding: 8px 12px;
+                border-radius: 10px;
+                z-index: 999;
+            }
+            #timer {
+                top: 20px;
+                left: 20px;
+            }
+            #hint {
+                top: 20px;
+                right: 20px;
+                cursor: pointer;
+            }
+            #phraseContainer {
+                position: relative;
+                background-color: rgba(0,0,0,0.1);
+                padding: 20px;
+                border-radius: 10px;
+                min-height: 200px;
+                max-height: 300px;
+                text-align: left;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            #fullPhrase {
+                color: rgba(255,255,255,0.4);
+                white-space: pre-wrap;
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                z-index: 0;
+            }
+            #typedText {
+                position: relative;
+                white-space: pre-wrap;
+                z-index: 1;
+            }
+            .cursor {
+                display: inline-block;
+                width: 2px;
+                height: 1.2em;
+                background: white;
+                animation: blink 1s infinite;
+                vertical-align: bottom;
+            }
+            @keyframes blink {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0; }
+            }
+            .correct { color: lightgreen; }
+            .incorrect { color: red; }
+            input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            }
+            button {
+            margin: 10px 5px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #2E7D32;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            }
+            button:hover {
+            transform: scale(1.05);
+            }
+            #scoreboard {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            }
+            #smallMessage {
+            font-size: 10px;
+            opacity: 0.1;
+            text-align: right;
+            margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="timer">Temps : 200.00s</div>
+        <div id="hint" onclick="showHint()">💡</div>
+        <div class="container animate__animated animate__fadeIn">
+            <h1>Test de Frappe</h1>
+            <div id="phraseContainer">
+                <div id="fullPhrase">Dans un monde lointain, où les montagnes touchaient presque le ciel et les forêts semblaient cacher des secrets anciens, un voyageur solitaire se lança dans une aventure périlleuse. Chaque étape le rapprochait des mystères cachés, et chaque nouveau chemin semblait mener à un horizon inconnu. Les nuits étaient froides et les jours pleines de découvertes surprenantes, mais il avançait sans relâche, guidé par une vision qui ne cessait de grandir. C'était un défi, mais il savait qu'au bout de ce voyage, un trésor inestimable l'attendait. À la fin de son périple, il avait enfin trouvé ce qu'il cherchait, regardez en bas a droite de l'écran, mais il ne pouvait s'empêcher de penser aux leçons apprises sur le chemin.</div>
+                <span id="typedText"></span><span class="cursor" id="cursor"></span>
+            </div>
+            <input type="text" id="input" placeholder="Tapez ici..." disabled>
+            <br>
+            <button id="startButton" onclick="startGame()">Commencer</button>
+            <button id="validateButton" style="display:none;" onclick="checkTyping()">Valider</button>
+            <div id="scoreboard">
+                <h2>🏆 Meilleurs Scores</h2>
+                <p><span id="score1">0.00</span> sec</p>
+                <p><span id="score2">0.00</span> sec</p>
+                <p><span id="score3">0.00</span> sec</p>
+            </div>
+            <p id="smallMessage">Il faut entrer le mot "Porte".</p>
+        </div>
+        <script>
+            const phrase = document.getElementById("fullPhrase").innerText;
+            const correctWord = "Porte";
+            let startTime, timerInterval;
+            let timerRunning = false;
 
-    <script>
-        const phrase = "Dans un monde lointain, où les montagnes touchaient presque le ciel et les forêts semblaient cacher des secrets anciens, un voyageur solitaire se lança dans une aventure périlleuse. Chaque étape le rapprochait des mystères cachés, et chaque nouveau chemin semblait mener à un horizon inconnu. Les nuits étaient froides et les jours pleins de découvertes surprenantes, mais il avançait sans relâche, guidé par une vision qui ne cessait de grandir. C'était un défi, mais il savait qu'au bout de ce voyage, un trésor inestimable l'attendait. À la fin de son périple, il avait enfin trouvé ce qu'il cherchait, regardez en bas a droite de l'écran, mais il ne pouvait s'empêcher de penser aux leçons apprises sur le chemin.";
-        const correctWord = "Porte";
-        let startTime, timerInterval;
-        let highScores = [Infinity, Infinity, Infinity];
+            function startGame() {
+                document.getElementById("typedText").innerHTML = '';
+                document.getElementById("input").value = '';
+                document.getElementById("input").disabled = false;
+                document.getElementById("input").focus();
+                document.getElementById("startButton").style.display = "none";
+                document.getElementById("validateButton").style.display = "inline-block";
+                startTime = new Date().getTime();
+                timerRunning = true;
+                let timeLeft = 200;
+                clearInterval(timerInterval);
 
-        function startGame() {
-            document.getElementById("phrase").innerText = phrase;
-            document.getElementById("input").value = "";
-            document.getElementById("input").disabled = false;
-            document.getElementById("input").focus();
-            document.getElementById("startButton").style.display = "none";
-            document.getElementById("smallMessage").style.display = "block";
-            document.getElementById("validateButton").style.display = "inline-block";
-            document.getElementById("scoreboard").style.display = "none";
-            document.getElementById("lostMessage").style.display = "none";
-
-            startTime = new Date().getTime();
-            let timeLeft = 200;
-            document.getElementById("timer").innerText = `Temps: ${timeLeft.toFixed(2)}s`;
-            
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                const elapsedTime = (new Date().getTime() - startTime) / 1000;
-                timeLeft = 200 - elapsedTime;
-                if (timeLeft <= 0) {
+                timerInterval = setInterval(() => {
+                    if (!timerRunning) return;
+                    const elapsedTime = (new Date().getTime() - startTime) / 1000;
+                    timeLeft = 200 - elapsedTime;
+                    if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     document.getElementById("input").disabled = true;
-                    document.getElementById("lostMessage").style.display = "block";
-                } else {
-                    document.getElementById("timer").innerText = `Temps: ${timeLeft.toFixed(2)}s`;
+                    Swal.fire({ icon: 'error', title: 'Temps écoulé', text: 'Vous avez perdu !' });
+                    } else {
+                    document.getElementById("timer").innerText = `Temps : ${timeLeft.toFixed(2)}s`;
+                    }
+                }, 100);
+            }
+
+            document.getElementById("input").addEventListener("input", function () {
+                const typed = this.value;
+                const cursor = document.getElementById("cursor");
+                let display = '';
+                for (let i = 0; i < typed.length; i++) {
+                    if (typed[i] === phrase[i]) {
+                    display += `<span class='correct'>${typed[i]}</span>`;
+                    cursor.style.background = 'white';
+                    } else {
+                    display += `<span class='incorrect'>${typed[i]}</span>`;
+                    cursor.style.background = 'red';
+                    break;
+                    }
                 }
-            }, 100);
-        }
+                document.getElementById("typedText").innerHTML = display;
+            });
 
-        function checkTyping() {
-            clearInterval(timerInterval);
-            const endTime = new Date().getTime();
-            const userInput = document.getElementById("input").value;
+            function updateHighScores(newScore) {
+                let scores = JSON.parse(localStorage.getItem("highTypingScores")) || [Infinity, Infinity, Infinity];
 
-            if (userInput === correctWord) {
+                scores.push(newScore);
+                scores = scores.filter(score => typeof score === "number" && isFinite(score)); // 🔐 sécurité
+                scores.sort((a, b) => a - b);
+                scores = scores.slice(0, 3);
+                localStorage.setItem("highTypingScores", JSON.stringify(scores));
+
+                document.getElementById("score1").innerText = scores[0] !== Infinity ? scores[0].toFixed(2) : "0.00";
+                document.getElementById("score2").innerText = scores[1] !== Infinity ? scores[1].toFixed(2) : "0.00";
+                document.getElementById("score3").innerText = scores[2] !== Infinity ? scores[2].toFixed(2) : "0.00";
+            }
+
+
+            function checkTyping() {
+                const input = document.getElementById("input").value.trim();
+                const endTime = new Date().getTime();
                 const elapsedTime = (endTime - startTime) / 1000;
-                updateHighScores(elapsedTime);
-                document.getElementById("nextButton").style.display = "inline-block";
+
+                if (input.toLowerCase() === correctWord.toLowerCase()) {
+                    clearInterval(timerInterval);
+                    timerRunning = false;
+                    updateHighScores(elapsedTime);
+                    Swal.fire({
+                    icon: 'success',
+                    title: '🎉 Félicitations !',
+                    html: '<b>Vous avez trouvé le bon mot !</b><br><br><button onclick="window.location.href=\'#\'" style="padding:10px 20px; margin-top:20px; font-size:16px; border:none; border-radius:8px; background-color:#43A047; color:white; cursor:pointer;">Passer au jeu suivant</button>',
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                    });
+                } else if (input === phrase) {
+                    Swal.fire({
+                    icon: 'info',
+                    title: '✅ Texte correct',
+                    text: 'Mais ce n’est pas le mot qui vous permettra d’accéder à la suite.'
+                    });
+                } else {
+                    Swal.fire({
+                    icon: 'error',
+                    title: '❌ Erreur',
+                    text: 'Vous avez une faute dans votre texte ou il n’est pas terminé.'
+                    });
+                }
             }
-        }
 
-        function updateHighScores(newScore) {
-            highScores.push(newScore);
-            highScores.sort((a, b) => a - b);
-            highScores = highScores.slice(0, 3);
+            function loadStoredScores() {
+                const scores = (JSON.parse(localStorage.getItem("highTypingScores")) || []).filter(s => typeof s === "number" && isFinite(s));
 
-            document.getElementById("score1").innerText = highScores[0] !== Infinity ? highScores[0].toFixed(2) : "0.00";
-            document.getElementById("score2").innerText = highScores[1] !== Infinity ? highScores[1].toFixed(2) : "0.00";
-            document.getElementById("score3").innerText = highScores[2] !== Infinity ? highScores[2].toFixed(2) : "0.00";
-
-            document.getElementById("scoreboard").style.display = "block";
-        }
-
-        document.getElementById("input").addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                checkTyping();
+                document.getElementById("score1").innerText = scores[0] !== undefined ? scores[0].toFixed(2) : "0.00";
+                document.getElementById("score2").innerText = scores[1] !== undefined ? scores[1].toFixed(2) : "0.00";
+                document.getElementById("score3").innerText = scores[2] !== undefined ? scores[2].toFixed(2) : "0.00";
             }
-        });
 
-        function goToNextPage() {
-            window.location.href = "nextPage.html";
-        }
-    </script>
-</body>
+
+            function showHint() {
+                Swal.fire({ icon: 'info', title: 'Indice 💡', text: 'Un objet que l’on ouvre pour entrer quelque part...' });
+            }
+
+            loadStoredScores();
+
+            const inputField = document.getElementById("input");
+
+            inputField.addEventListener("paste", e => e.preventDefault());
+            inputField.addEventListener("copy", e => e.preventDefault());
+            inputField.addEventListener("cut", e => e.preventDefault());
+
+        </script>
+    </body>
 </html>
