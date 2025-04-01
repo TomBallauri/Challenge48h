@@ -4,21 +4,19 @@ let finishLine = document.getElementById("finish-line");
 let startButton = document.getElementById("start");
 let restartButton = document.getElementById("restart");
 
-let playerPosition = 0; // Position du joueur
-let computerPosition = 0; // Position de l'ordinateur
-let gameStarted = false; // Le jeu est-il en cours ?
-let computerInterval; // Stocke l'intervalle de déplacement de l'ordinateur
-let distanceInterval; // Variable pour stocker l'intervalle de mise à jour de la distance
+let playerPosition = 0; 
+let computerPosition = 0; 
+let gameStarted = false; 
+let computerInterval; 
+let distanceInterval; 
 
-// Fonction pour déplacer l'emoji du joueur
 function movePlayer() {
   player.style.left = `${playerPosition}px`;
 }
 
-// Fonction pour déplacer l'ordinateur avec une vitesse légèrement augmentée
 function moveComputer() {
   if (!gameStarted) return;
-  let speed = Math.random() * (5.0 - 4.0) + 4.0; // Vitesse entre 2.0 et 3.0 px
+  let speed = Math.random() * (5.0 - 4.0) + 4.0; 
   computerPosition += speed;
   computer.style.left = `${computerPosition}px`;
 
@@ -27,7 +25,6 @@ function moveComputer() {
   }
 }
 
-// Fonction de démarrage du jeu
 startButton.addEventListener("click", () => {
   gameStarted = true;
   startButton.disabled = true;
@@ -40,14 +37,13 @@ startButton.addEventListener("click", () => {
   clearInterval(computerInterval);
   computerInterval = setInterval(moveComputer, 20);
 
-  startDistanceTracking(); // Démarre la mise à jour continue de la distance
+  startDistanceTracking(); 
 });
 
-// Fonction de réinitialisation du jeu
 restartButton.addEventListener("click", () => {
   gameStarted = false;
   clearInterval(computerInterval);
-  stopDistanceTracking(); // Arrête la mise à jour continue de la distance
+  stopDistanceTracking(); 
   playerPosition = 0;
   computerPosition = 0;
   player.style.left = "0px";
@@ -56,55 +52,26 @@ restartButton.addEventListener("click", () => {
   restartButton.disabled = true;
 });
 
-// Fonction de fin de jeu
-function endGame(message) {
-  gameStarted = false;
-  clearInterval(computerInterval);
-  stopDistanceTracking();
-
-  let finalDistance = playerPosition - computerPosition;
-  updateBestScores(finalDistance); // Mise à jour des meilleurs scores
-
-  // Afficher la pop-up correspondante selon le message
-  if (message.includes("Vous avez gagné")) {
-    showWinPopup(); // Afficher la pop-up de victoire
-  } else {
-    showLosePopup(); // Afficher la pop-up de défaite
-  }
-
-  // Supprimer le bouton "Suivant" après fermeture de la pop-up
-  const nextButton = document.getElementById("next-button");
-  if (nextButton) {
-    nextButton.remove();
-  }
-}
-
-
-// Fonction pour démarrer le suivi de la distance
 function startDistanceTracking() {
-  distanceInterval = setInterval(updateDistance, 100); // Mettre à jour la distance toutes les 100ms
+  distanceInterval = setInterval(updateDistance, 100); 
 }
 
-// Fonction pour arrêter le suivi de la distance
 function stopDistanceTracking() {
   clearInterval(distanceInterval);
 }
 
-// Fonction pour mettre à jour la distance entre le joueur et l'ordinateur dans le scoreboard
 function updateDistance() {
   let distance = playerPosition - computerPosition;
-  let distanceInMeters = (distance / 100).toFixed(2); // Conversion en mètres
+  let distanceInMeters = (distance / 100).toFixed(2); 
   const distanceDisplay = document.getElementById("score");
 
   if (distance >= 0) {
-    distanceDisplay.textContent = `+${distanceInMeters} m`; // Affichage positif
+    distanceDisplay.textContent = `+${distanceInMeters} m`; 
   } else {
-    distanceDisplay.textContent = `${distanceInMeters} m`; // Affichage négatif
+    distanceDisplay.textContent = `${distanceInMeters} m`;
   }
 }
 
-
-// Drag & Drop du joueur
 player.addEventListener("mousedown", (e) => {
   if (!gameStarted) return;
   
@@ -133,15 +100,14 @@ player.addEventListener("mousedown", (e) => {
   window.addEventListener("mouseup", onMouseUp);
 });
 
-// Fonction pour mettre à jour la distance entre le joueur et l'ordinateur lors du clic
 document.addEventListener("mousedown", () => {
   if (gameStarted) {
-    playerPosition += 22; // Déplacement par clic légèrement augmenté
+    playerPosition += 22; 
     if (playerPosition > finishLine.offsetLeft - player.offsetWidth) {
       playerPosition = finishLine.offsetLeft - player.offsetWidth;
     }
     movePlayer();
-    updateDistance(); // Mettre à jour la distance après chaque mouvement du joueur
+    updateDistance(); 
 
     if (playerPosition >= finishLine.offsetLeft - player.offsetWidth) {
       endGame("Vous avez gagné !");
@@ -149,24 +115,22 @@ document.addEventListener("mousedown", () => {
   }
 });
 
-// Fonction pour mettre à jour les meilleurs scores en localStorage
 function updateBestScores(newScore) {
   let bestScores = JSON.parse(localStorage.getItem("bestScores")) || [];
 
   bestScores.push(newScore);
-  bestScores.sort((a, b) => b - a); // Trier par ordre décroissant
-  bestScores = bestScores.slice(0, 3); // Garder seulement les 3 meilleurs
+  bestScores.sort((a, b) => b - a); 
+  bestScores = bestScores.slice(0, 3);
 
   localStorage.setItem("bestScores", JSON.stringify(bestScores));
   displayBestScores();
 }
 
-// Fonction pour afficher les meilleurs scores
 function displayBestScores() {
   let bestScores = JSON.parse(localStorage.getItem("bestScores")) || [];
   let bestScoresList = document.getElementById("best-scores");
 
-  bestScoresList.innerHTML = ""; // Nettoyer l'affichage
+  bestScoresList.innerHTML = ""; 
   bestScores.forEach(score => {
     let li = document.createElement("li");
     let scoreInMeters = (score / 100).toFixed(2);
@@ -175,65 +139,8 @@ function displayBestScores() {
   });
 }
 
-// Met à jour les meilleurs scores à chaque fin de partie
-function endGame(message) {
-  gameStarted = false;
-  clearInterval(computerInterval);
-  stopDistanceTracking();
-
-  let finalDistance = playerPosition - computerPosition;
-  updateBestScores(finalDistance); // Mise à jour des meilleurs scores
-
-  // Afficher la pop-up correspondante selon le message
-  if (message.includes("Vous avez gagné")) {
-    showWinPopup(); // Afficher la pop-up de victoire
-  } else {
-    showLosePopup(); // Afficher la pop-up de défaite
-  }
-}
-
-// Fonction pour afficher et fermer les pop-ups
-function showWinPopup() {
-  const victoryPopup = document.getElementById("victory-popup");
-  victoryPopup.style.display = "block";
-
-  // Créer un bouton "Suivant"
-  let nextButton = document.createElement("button");
-  nextButton.textContent = "Suivant";
-  nextButton.id = "next-button";
-
-  // Ajouter le bouton à la pop-up
-  victoryPopup.appendChild(nextButton);
-
-  // Ajouter l'événement de redirection au clic sur le bouton
-  nextButton.addEventListener("click", () => {
-    window.location.href = "../../TestMemoir.html"; // Redirige vers la page "TestMemoire.html"
-  });
-}
-
-
-
-function closeWinPopup() {
-  document.getElementById("victory-popup").style.display = "none";
-}
-
-function showLosePopup() {
-  document.getElementById("lose-popup").style.display = "block";
-}
-
-function closeLosePopup() {
-  document.getElementById("lose-popup").style.display = "none";
-}
-
-// Fermer la pop-up de victoire en cliquant sur le bouton
-document.getElementById("close-popup").addEventListener("click", closeWinPopup);
-document.getElementById("close-lose-popup").addEventListener("click", closeLosePopup);
-
-
-// Afficher les scores au chargement de la page
 document.addEventListener("DOMContentLoaded", displayBestScores);
 
-// Afficher les messages d'aide au clic sur le bouton "Aide"
 let helpMessages = [
   "Astuce : Concentre toi !",
   "Astuce : Plus tu es rapide, plus tu as de chances de gagner !",
@@ -243,34 +150,33 @@ let helpMessages = [
 ];
 
 let helpIndex = 0;
-let helpClickCount = 0; // Compteur de clics sur le bouton "Aide"
+let helpClickCount = 0; 
 let helpButton = document.getElementById("help");
 let helpContainer = document.createElement("div");
 helpContainer.id = "help-container";
 document.body.appendChild(helpContainer);
 
 helpButton.addEventListener("click", () => {
-  helpClickCount++; // Incrémente le compteur de clics
+  helpClickCount++; 
 
-  // Vérifie si on doit afficher l'astuce 5 (seulement après 10 clics)
   if (helpIndex === 4 && helpClickCount < 10) {
-    helpIndex = 0; // Revenir à la première astuce sans afficher la 5ème
+    helpIndex = 0; 
   }
 
   helpContainer.textContent = helpMessages[helpIndex];
-  helpContainer.style.display = "block";
+  helpContainer.style.display = "flex";
 
-  helpIndex = (helpIndex + 1) % helpMessages.length; // Boucle sur les astuces
+  helpIndex = (helpIndex + 1) % helpMessages.length; 
 
   setTimeout(() => {
-    helpContainer.style.display = "none"; // Cache la bulle après 3 secondes
+    helpContainer.style.display = "none"; 
   }, 1300);
 
-  helpButton.disabled = true; // Désactive temporairement le bouton
+  helpButton.disabled = true; 
 
 setTimeout(() => {
-  helpContainer.style.display = "none"; // Cache la bulle après 3 secondes
-  helpButton.disabled = false; // Réactive le bouton après la disparition de la bulle
+  helpContainer.style.display = "none"; 
+  helpButton.disabled = false; 
 }, 1300);
 });
 
