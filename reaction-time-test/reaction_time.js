@@ -35,7 +35,7 @@ testArea.addEventListener("click", () => {
     if (testArea.style.backgroundColor === "green" && canClickGreen) {
         endTime = performance.now();
         const reactionTime = Math.round(endTime - startTime);  // Arrondi à la ms près
-        if (reactionTime <= 320) {
+        if (reactionTime <= 270) {
             nextGameButton.disabled = false; // Active le bouton
         } else {
             nextGameButton.disabled = true; // Désactive le bouton si le score est inférieur

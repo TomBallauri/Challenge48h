@@ -4,7 +4,7 @@ Pour le premier mini-jeu :
 
 Reaction Time Test – Un jeu rapide pour tester les réflexes et échauffer le joueur.
 
-Le joueur devra simplement cliquer au moment où l'écran devient vert et faire un score minimum 320 ms.
+Le joueur devra simplement cliquer au moment où l'écran devient vert et faire un score minimum 270 ms.
 
 Le seconde mini-jeu : 
 
