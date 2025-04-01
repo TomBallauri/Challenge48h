@@ -60,9 +60,25 @@ restartButton.addEventListener("click", () => {
 function endGame(message) {
   gameStarted = false;
   clearInterval(computerInterval);
-  stopDistanceTracking(); // Arrête la mise à jour continue de la distance
-  alert(message);
+  stopDistanceTracking();
+
+  let finalDistance = playerPosition - computerPosition;
+  updateBestScores(finalDistance); // Mise à jour des meilleurs scores
+
+  // Afficher la pop-up correspondante selon le message
+  if (message.includes("Vous avez gagné")) {
+    showWinPopup(); // Afficher la pop-up de victoire
+  } else {
+    showLosePopup(); // Afficher la pop-up de défaite
+  }
+
+  // Supprimer le bouton "Suivant" après fermeture de la pop-up
+  const nextButton = document.getElementById("next-button");
+  if (nextButton) {
+    nextButton.remove();
+  }
 }
+
 
 // Fonction pour démarrer le suivi de la distance
 function startDistanceTracking() {
@@ -178,8 +194,24 @@ function endGame(message) {
 
 // Fonction pour afficher et fermer les pop-ups
 function showWinPopup() {
-  document.getElementById("victory-popup").style.display = "block";
+  const victoryPopup = document.getElementById("victory-popup");
+  victoryPopup.style.display = "block";
+
+  // Créer un bouton "Suivant"
+  let nextButton = document.createElement("button");
+  nextButton.textContent = "Suivant";
+  nextButton.id = "next-button";
+
+  // Ajouter le bouton à la pop-up
+  victoryPopup.appendChild(nextButton);
+
+  // Ajouter l'événement de redirection au clic sur le bouton
+  nextButton.addEventListener("click", () => {
+    window.location.href = "../../TestMemoir.html"; // Redirige vers la page "TestMemoire.html"
+  });
 }
+
+
 
 function closeWinPopup() {
   document.getElementById("victory-popup").style.display = "none";

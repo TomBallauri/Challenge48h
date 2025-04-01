@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fin du Jeu</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: red;
+            position: relative;
+        }
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            z-index: 1;
+        }
+        .gif-container {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .gif-left {
+            left: 10px;
+        }
+        .gif-right {
+            right: 10px;
+        }
+        img {
+            max-width: 500px;
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="gif-container gif-left">
+        <img src="/Assets/squelette.gif" alt="GIF gauche">
+    </div>
+    <h1>Bravo vous avez gagné!!!</h1>
+    <div class="gif-container gif-right">
+        <img src="/Assets/squelette.gif" alt="GIF droite">
+    </div>
+</body>
+</html>

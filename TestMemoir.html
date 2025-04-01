@@ -102,6 +102,7 @@
             text-align: right;
             cursor: move;
             position: relative;
+            margin-top: 10px;
         }
 
         /* Crois de fermeture dans la barre */
@@ -118,13 +119,12 @@
             width: 100%;
             height: auto;
         }
-
         
     </style>
 </head>
 <body>
     <h1>Jeu de Mémoire</h1>
-    <p id="introMessage">Pour valider ce mini-jeu, vous devez obtenir un score de 2 minimum. Vous pouvez être aidé par votre équipe.</p>
+    <p id="introMessage">Pour valider ce mini-jeu, vous devez obtenir un score de 9 minimum. Vous pouvez être aidé par votre équipe.</p>
     
     <div id="grid">
         <div class="cell" data-index="0"></div>
@@ -147,12 +147,11 @@
     <div id="highscoreMessage"></div> <!-- Tableau des scores sous le bouton Commencer -->
     
     <p id="roundMessage">Manche: 0</p>
-    <button id="nextButton" onclick="window.location.href = 'nextPage.html'">Suivant</button>
+    <button id="nextButton" onclick="window.location.href = '/End.html'">Suivant</button>
 
     <!-- Popup vidéo -->
     <div id="popup">
         <div id="popupHeader">
-            Publicité
             <span id="popupClose" onclick="closePopup()">X</span>
         </div>
         <video id="popupVideo" controls></video>
@@ -239,7 +238,7 @@
             }
 
             if (userSequence[userSequence.length - 1] !== sequence[userSequence.length - 1]) {
-                endGame('Tu as fait une erreur ! Le jeu recommence.');
+                endGame('Perdu gros loser');
                 return;
             }
 
@@ -268,7 +267,7 @@
             gameInProgress = false;
             messageElement.innerText = message;
             messageElement.style.display = 'block'; // Affiche le message de défaite
-            if (round >= 2) {
+            if (round >= 9) {
                 // Mise à jour du tableau des scores
                 updateHighScores(round - 1);
                 highscoreMessage.style.display = 'block'; // Affiche le tableau des scores
