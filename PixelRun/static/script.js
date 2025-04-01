@@ -172,3 +172,45 @@ function endGame(message) {
 
 // Afficher les scores au chargement de la page
 document.addEventListener("DOMContentLoaded", displayBestScores);
+
+// Afficher les messages d'aide au clic sur le bouton "Aide"
+let helpMessages = [
+  "Astuce : Concentre toi !",
+  "Astuce : Plus tu es rapide, plus tu as de chances de gagner !",
+  "Astuce : Tu n'auras pas plus d'aide.",
+  "Astuce : Non",
+  "Astuce : Le clic n'est pas la solution. Il faut TENIR bon !",
+];
+
+let helpIndex = 0;
+let helpClickCount = 0; // Compteur de clics sur le bouton "Aide"
+let helpButton = document.getElementById("help");
+let helpContainer = document.createElement("div");
+helpContainer.id = "help-container";
+document.body.appendChild(helpContainer);
+
+helpButton.addEventListener("click", () => {
+  helpClickCount++; // Incrémente le compteur de clics
+
+  // Vérifie si on doit afficher l'astuce 5 (seulement après 10 clics)
+  if (helpIndex === 4 && helpClickCount < 10) {
+    helpIndex = 0; // Revenir à la première astuce sans afficher la 5ème
+  }
+
+  helpContainer.textContent = helpMessages[helpIndex];
+  helpContainer.style.display = "block";
+
+  helpIndex = (helpIndex + 1) % helpMessages.length; // Boucle sur les astuces
+
+  setTimeout(() => {
+    helpContainer.style.display = "none"; // Cache la bulle après 3 secondes
+  }, 1300);
+
+  helpButton.disabled = true; // Désactive temporairement le bouton
+
+setTimeout(() => {
+  helpContainer.style.display = "none"; // Cache la bulle après 3 secondes
+  helpButton.disabled = false; // Réactive le bouton après la disparition de la bulle
+}, 1300);
+});
+
